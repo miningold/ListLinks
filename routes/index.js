@@ -2,14 +2,22 @@ var parse = require('url').parse,
     request = require('request'),
     cheerio = require('cheerio');
 
-exports.index = function(req, res){
-  res.render('base');
+exports.index = function(req, res) {
+  console.log('here');
+  res.render('index');
 };
 
 exports.list = function(req, res, next) {
   var param = req.params[0],
       protocol = /^https?:\/\//,
       url, uri;
+
+  param = param.trim();
+
+  if (param === '') {
+    res.render('index');
+    return;
+  }
 
   // Add protocol to uri
   if (!protocol.test(param)) {
@@ -71,7 +79,6 @@ exports.list = function(req, res, next) {
             src = '/' + src;
           }
 
-          console.log(src);
           src = url.protocol + '//' + url.host + src;
         }
       }

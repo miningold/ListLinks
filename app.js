@@ -68,7 +68,7 @@ app.configure(function() {
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(express.cookieParser('your secret here'));
+  app.use(express.cookieParser('correct horse battery staple'));
   app.use(express.session());
   app.use(app.router);
   app.use('/static', express.static(path.join(__dirname, 'public')));
