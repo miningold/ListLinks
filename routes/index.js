@@ -2,8 +2,9 @@ var parse = require('url').parse,
     request = require('request'),
     cheerio = require('cheerio');
 
-exports.index = function(req, res){
-  res.render('base');
+exports.index = function(req, res) {
+  console.log('here');
+  res.render('index');
 };
 
 exports.list = function(req, res, next) {
@@ -11,7 +12,12 @@ exports.list = function(req, res, next) {
       protocol = /^https?:\/\//,
       url, uri;
 
-  console.log(req.query.prev);
+  param = param.trim();
+
+  if (param === '') {
+    res.render('index');
+    return;
+  }
 
   // Add protocol to uri
   if (!protocol.test(param)) {
