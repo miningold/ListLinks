@@ -7,7 +7,6 @@ var express = require('express'),
     hbs = require('hbs'),
     fs = require('fs'),
     routes = require('./routes'),
-    user = require('./routes/user'),
     http = require('http'),
     path = require('path'),
     app = express();
@@ -72,7 +71,7 @@ app.configure(function() {
   app.use(express.cookieParser('your secret here'));
   app.use(express.session());
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
+  app.use('/static', express.static(path.join(__dirname, 'public')));
 });
 
 app.configure('development', function() {
@@ -82,9 +81,13 @@ app.configure('development', function() {
 ///////////////////////////////////////////////////
 // Routes
 
+
+
 app.get('/', routes.index);
 
 app.get('/*', routes.list);
+
+
 
 ///////////////////////////////////////////////////
 // Start the app
