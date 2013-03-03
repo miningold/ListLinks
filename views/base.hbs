@@ -4,10 +4,132 @@
   <title>
     {{#block "title"}} List Links {{/block}}
   </title>
+  <meta name="viewport" content="width=device-width">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:600italic,400,300,700' rel='stylesheet' type='text/css'>
+  <style type="text/css">
+
+    body {
+      background: #F3F3F4;
+      font-family: 'Open Sans', sans-serif;
+      overflow: hidden;
+    }
+
+    .container {
+      width: 300px;
+      height: 400px;
+      margin: -200px 0 0 -150px;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+    }
+
+    .top {
+      height: 0;
+      /*height: 30px;
+      background: #E6E7E8;*/
+      border-bottom: 30px solid #E6E7E8;
+      border-left: 20px solid transparent;
+      border-right: 20px solid transparent;
+      z-index: 1;
+    }
+
+    h1 {
+      font-weight: 300;
+      font-size: 4em;
+      line-height: 0;
+      text-align: center;
+      position: relative;
+      top: -10px;
+      z-index: 1;
+    }
+
+    h1:before, h1:after {
+      display: block;
+      position: absolute;
+      bottom: -0.6em;
+      left: 0;
+      right: 0;
+      z-index: 1;
+    }
+
+    h1:before {
+      content: 'listlinks';
+      opacity: 0.08;
+
+      -webkit-transform: scaleY(-0.5);
+      -moz-transform: scaleY(-0.5);
+      -o-transform: scaleY(-0.5);
+      -ms-transform: scaleY(-0.5);
+      transform: scaleY(-0.5);
+    }
+
+    h1:after {
+      background: -webkit-gradient(linear, left top, left center, from(rgba(231,231,231,0)), to(rgba(231,231,231,0.8)));
+      content: ' ';
+      bottom: -0.65em;
+      height: 0.2em;
+    }
+
+
+    .front {
+      height: 300px;
+      background: #DBDCDE;
+      box-sizing: border-box;
+      padding: 20px;
+      font-size: 0.9em;
+      position: relative;
+      z-index: 10;
+      margin-bottom: -5px;
+    }
+
+    .search {
+      width: 250px;
+      margin: auto;
+    }
+
+    input {
+      width: 180px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin-top: 0;
+    }
+
+    .shadow {
+      position: relative;
+      left: -30px;
+      width: 360px;
+      height: 10px;
+      background: -webkit-radial-gradient(rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0) 70%);
+    }
+
+  </style>
 </head>
 <body>
+
   {{#block "content"}}
-    You made it to the index page.
+
+  <div class="container">
+    <div class="top">
+      <h1>listlinks</h1>
+    </div>
+    <div class="front">
+      <form class="search">
+        <input type="text" placeholder="Type a URL here">
+        <button type="submit">Go!</button>
+      </form>
+      <div class="description">
+        <p>Just type in a URL above to get a <b>list</b> of the <b>links</b> on that page.</p>
+        <p>You’ll see the most popular links at the top, plus you can sort or search the links.</p>
+        <p>Once you’re in the right place, just tap the arrow at the bottom to view your current page as you would normally.</p>
+        <p>Faster, smarter, <b><em>listlinks</em></b>.</p>
+      </div>
+    </div>
+    <div class="shadow"></div>
+  </div>
+
   {{/block}}
+
 </body>
 </html>
