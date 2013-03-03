@@ -1,0 +1,16 @@
+{{#partial "content"}}
+
+  <a href="{{uri}}" target="_blank">View Current Page</a>
+  {{#each links}}
+    <li><a href="{{href}}">
+      {{#if src}}
+        <img src="{{src}}">
+      {{else}}
+        {{text}}
+      {{/if}}
+    </a></li>
+  {{/each}}
+
+{{/partial}}
+
+{{> base}}
