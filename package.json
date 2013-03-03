@@ -9,6 +9,8 @@
     "express": "3.*",
     "hbs": "*",
     "request": "*",
-    "cheerio": "*"
+    "cheerio": "*",
+    "lodash": "*",
+    "mongodb": "1.2.11"
   }
 }

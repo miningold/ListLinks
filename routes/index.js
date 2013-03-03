@@ -1,6 +1,7 @@
 var parse = require('url').parse,
     request = require('request'),
-    cheerio = require('cheerio');
+    cheerio = require('cheerio'),
+    data = require('../data');
 
 exports.index = function(req, res) {
   console.log('here');
@@ -26,6 +27,8 @@ exports.list = function(req, res, next) {
     uri = param;
   }
 
+
+
   url = parse(uri);
 
   request.get(uri, function(error, response, body) {
@@ -36,6 +39,14 @@ exports.list = function(req, res, next) {
       console.dir(error);
       return next(error);
     }
+
+    // data.upsert('foo.com', { url: uri }, function(error, result) {
+    //   if (error) {
+    //     throw error;
+    //   }
+
+    //   console.log('It worked: ' + result);
+    // });
 
     contentType = response.headers['content-type'];
 

@@ -84,6 +84,7 @@ app.configure('development', function() {
 
 
 app.get('/', routes.index);
+app.post('/', routes.index);
 
 app.get('/*', routes.list);
 
