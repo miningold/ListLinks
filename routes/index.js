@@ -6,14 +6,16 @@ exports.index = function(req, res){
   res.render('base');
 };
 
-exports.list = function(req, res) {
-  var uri = req.params[0],
+exports.list = function(req, res, next) {
+  var param = req.params[0],
       protocol = /^https?:\/\//,
-      url;
+      url, uri;
 
   // Add protocol to uri
-  if (!protocol.test(uri)) {
-    uri = 'http://' + uri;
+  if (!protocol.test(param)) {
+    uri = 'http://' + param;
+  } else {
+    uri = param;
   }
 
   url = parse(uri);
@@ -24,8 +26,7 @@ exports.list = function(req, res) {
 
     if (error) {
       console.dir(error);
-      res.end();
-      return;
+      return next(error);
     }
 
     contentType = response.headers['content-type'];
@@ -53,7 +54,26 @@ exports.list = function(req, res) {
 
       // If relative path, expand to absolute path
       if (!protocol.test(href)) {
+        if (!/^\//.test(href)) {
+          href = '/' + href;
+        }
         href = url.protocol + '//' + url.host + href;
+      }
+
+      if (src) {
+        if (/^\/\//.test(src)) {
+          src = 'http:' + src;
+        }
+
+        if (!protocol.test(src)) {
+
+          if (!/^\//.test(src)) {
+            src = '/' + src;
+          }
+
+          console.log(src);
+          src = url.protocol + '//' + url.host + src;
+        }
       }
 
       // Use href if link is empty
