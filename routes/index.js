@@ -11,6 +11,8 @@ exports.list = function(req, res, next) {
       protocol = /^https?:\/\//,
       url, uri;
 
+  console.log(req.query.prev);
+
   // Add protocol to uri
   if (!protocol.test(param)) {
     uri = 'http://' + param;
@@ -71,7 +73,6 @@ exports.list = function(req, res, next) {
             src = '/' + src;
           }
 
-          console.log(src);
           src = url.protocol + '//' + url.host + src;
         }
       }
