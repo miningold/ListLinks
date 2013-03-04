@@ -117,13 +117,21 @@
 
 {{#partial "content"}}
 
+<script>
+  function search() {
+    var url = document.getElementById('searchUrl').value;
+    window.location = url;
+    return false;
+  }
+</script>
+
 <div class="container">
   <div class="top">
     <h1 unselectable="on">listlinks</h1>
   </div>
   <div class="front">
-    <form class="search">
-      <input type="text" placeholder="Type a URL here">
+    <form class="search" onsubmit="return search();">
+      <input id="searchUrl" type="text" placeholder="Type a URL here">
       <button type="submit">Go!</button>
     </form>
     <div class="description">
