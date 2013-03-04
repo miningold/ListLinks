@@ -1,5 +1,120 @@
 {{#partial "title"}}List Links{{/partial}}
 
+<style type="text/css">
+
+  body {
+    background: #FFFFFF;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+  .container {
+    width: 300px;
+    height: 400px;
+    margin: -200px 0 0 -150px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+
+  .top {
+    height: 0;
+    border-bottom: 30px solid #E6E7E8;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    z-index: 1;
+  }
+
+  h1 {
+    font-weight: 300;
+    font-size: 4em;
+    line-height: 0;
+    text-align: center;
+    position: relative;
+    top: -10px;
+    z-index: 1;
+
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+ */
+
+    /* Rules below not implemented in browsers yet */
+    -o-user-select: none;
+    user-select: none;
+
+    cursor: default;
+  }
+
+  h1:before, h1:after {
+    display: block;
+    position: absolute;
+    bottom: -0.6em;
+    left: 0;
+    right: 0;
+    z-index: 1;
+  }
+
+  h1:before {
+    content: 'listlinks';
+    opacity: 0.08;
+
+    -webkit-transform: scaleY(-0.5);
+    -moz-transform: scaleY(-0.5);
+    -o-transform: scaleY(-0.5);
+    -ms-transform: scaleY(-0.5);
+    transform: scaleY(-0.5);
+  }
+
+  h1:after {
+    background: -webkit-gradient(linear, left top, left center, from(rgba(231,231,231,0)), to(rgba(231,231,231,0.8)));
+    content: ' ';
+    bottom: -0.65em;
+    height: 0.2em;
+  }
+
+
+  .front {
+    height: 300px;
+    background: #DBDCDE;
+    box-sizing: border-box;
+    padding: 20px;
+    font-size: 0.9em;
+    position: relative;
+    z-index: 10;
+    margin-bottom: -5px;
+    text-align: center;
+  }
+
+  .search {
+    width: 250px;
+    margin: auto;
+  }
+
+  input {
+    width: 180px;
+    margin-bottom: 20px;
+  }
+
+  button {
+  }
+
+  .description {
+    text-align: left;
+  }
+
+  p {
+    margin-top: 0;
+  }
+
+  .shadow {
+    position: relative;
+    left: -30px;
+    width: 360px;
+    height: 10px;
+    background: -webkit-radial-gradient(rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.2) 30%, rgba(0,0,0,0) 70%);
+  }
+
+</style>
+
 {{#partial "content"}}
 
 <script>
@@ -12,7 +127,7 @@
 
 <div class="container">
   <div class="top">
-    <h1>listlinks</h1>
+    <h1 unselectable="on">listlinks</h1>
   </div>
   <div class="front">
     <form class="search" onsubmit="return search();">
