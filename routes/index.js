@@ -1,4 +1,5 @@
-var parse = require('url').parse,
+var _ = require('lodash'),
+    url = require('url'),
     request = require('request'),
     cheerio = require('cheerio'),
     data = require('../data');
@@ -11,7 +12,7 @@ exports.index = function(req, res) {
 exports.list = function(req, res, next) {
   var param = req.params[0],
       protocol = /^https?:\/\//,
-      url, uri;
+      uri;
 
   param = param.trim();
 
@@ -29,8 +30,6 @@ exports.list = function(req, res, next) {
 
   console.log(uri);
 
-  url = parse(uri);
-
   request.get(uri, function(error, response, body) {
     var $, links,
         contentType;
@@ -46,19 +45,22 @@ exports.list = function(req, res, next) {
           throw error;
         }
       });
+
+      // Redirect without query
+      return res.redirect(url.parse(req.url).pathname);
     }
 
-    contentType = response.headers['content-type'];
+    // contentType = response.headers['content-type'];
 
-    if (contentType.indexOf('image') != -1) {
-      // TODO (tylor): Draw image instead of list
-      console.log('draw image');
-      res.end();
-      return;
-    }
+    // if (contentType.indexOf('image') != -1) {
+    //   // TODO (tylor): Draw image instead of list
+    //   console.log('draw image');
+    //   res.end();
+    //   return;
+    // }
 
     $ = cheerio.load(body);
-    links = [];
+    links = {};
 
     $('a').each(function(i, a) {
       var $link = $(a),
@@ -66,49 +68,46 @@ exports.list = function(req, res, next) {
           text = $link.html()
           src = $link.find('img').first().attr('src');
 
-      // Catch relative protocol paths
-      if (/^\/\//.test(href)) {
-        href = 'http:' + href;
-      }
-
-      // If relative path, expand to absolute path
-      if (!protocol.test(href)) {
-        if (!/^\//.test(href)) {
-          href = '/' + href;
-        }
-        href = url.protocol + '//' + url.host + href;
-      }
+      href = url.resolve(uri, href);
 
       if (src) {
-        if (/^\/\//.test(src)) {
-          src = 'http:' + src;
-        }
-
-        if (!protocol.test(src)) {
-
-          if (!/^\//.test(src)) {
-            src = '/' + src;
-          }
-
-          src = url.protocol + '//' + url.host + src;
-        }
+        src = url.resolve(uri, src);
       }
+
+      text = text.replace(/<(?:.|\n)*?>/gm, ' ');
 
       // Use href if link is empty
       if (text.trim() === '') {
         text = href;
       }
 
-      text = text.replace(/<(?:.|\n)*?>/gm, ' ');
+      console.log('text: ' + text);
 
-      links.push({
-        href: '/' + href,
+      href = '/' + href;
+
+      // links.push({
+      //   href: '/' + href,
+      //   text: text,
+      //   src: src
+      // });
+
+      // Use map to prevent dups
+      links[href] = {
         text: text,
         src: src
-      });
+      };
+    });
+
+    // convert map to array
+    links = _.map(links, function(data, href) {
+      data.href = href;
+      return data;
     });
 
     data.readPopular(uri, function(error, popular) {
+      if (error) {
+        throw error;
+      }
       console.log(popular);
       res.render('list', {
         uri: uri,
