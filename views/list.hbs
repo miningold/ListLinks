@@ -12,8 +12,7 @@
   }
 
   .wrapper {
-    padding-bottom: 80px;
-    box-sizing: border-box;
+    padding-bottom: 40px;
   }
 
   ul {
@@ -26,7 +25,11 @@
     list-style: none;
     margin: 0;
     padding: 0;
-    background: -webkit-linear-gradient(top, #EEEEEE, #DDDDDD);
+    background: #F2F2F2;
+    background: -webkit-linear-gradient(top, #E9E9E9 0%, #F2F2F2 10%, #F2F2F2 90%, #E9E9E9 100%);
+    -webkit-box-shadow: inset 0 0 1px rgba(0,0,0,0.1);
+    -moz-box-shadow: inset 0 0 1px rgba(0,0,0,0.1);
+    box-shadow: inset 0 0 1px rgba(0,0,0,0.1);
     border-bottom: 1px solid #CCCCCC;
   }
 
@@ -34,21 +37,32 @@
     display: block;
     height: 80px;
     text-decoration: none;
-    color: #222222;
   }
 
-  li img {
+  li h2 {
+    color: #404041;
     height: 80px;
+    line-height: 80px;
+    font-weight: normal;
+    margin: 0 0 0 0;
+    padding: 0 30px;
+    font-size: 2em;
+    white-space: nowrap;
+    overflow-y: hidden;
+    overflow-x: auto;
+  }
+
+  li .outline {
+    color: #FFFFFF;
+    background: rgba(0,0,0,0.4);
   }
 
   .footer {
     width: 100%;
-    height: 80px;
+    height: 50px;
     position: fixed;
     bottom: 0;
     left: 0;
-    margin-top: -80px;
-    clear: both;
     background: black;
   }
 
@@ -57,25 +71,24 @@
 {{#partial "content"}}
 
 <div class="wrapper">
-  <div class="main">
+  <ul>
+  {{#each links}}
+    <li><a href="{{href}}?prev={{../uri}}" style="background-image: url('{{src}}'); background-position: center center; background-repeat: no-repeat;">
+      {{#if src}}
+      <h2 class="outline">{{{text}}}</h2>
+      {{else}}
+      <h2>{{{text}}}</h2>
+      {{/if}}
+    </a></li>
+  {{/each}}
+  </ul>
 
-    <form class="search">
-      <input type="text" placeholder="Type a keyword here">
-      <button type="submit">Go!</button>
-    </form>
+  <form class="search">
+    <input type="text" placeholder="Type a keyword here">
+    <button type="submit">Go!</button>
+  </form>
 
-    <a href="{{uri}}" target="_blank">View Current Page</a>
-    <ul>
-    {{#each links}}
-      <li><a href="{{href}}?prev={{../uri}}" style="background: url('{{src}}');">
-        {{#if src}}
-        {{/if}}
-        {{{text}}}
-      </a></li>
-    {{/each}}
-    </ul>
-
-  </div>
+  <a href="{{uri}}" target="_blank">View Current Page</a>
 </div>
 
 <div class="footer"></div>
