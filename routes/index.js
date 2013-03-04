@@ -40,13 +40,13 @@ exports.list = function(req, res, next) {
       return next(error);
     }
 
-    // data.upsert('foo.com', { url: uri }, function(error, result) {
-    //   if (error) {
-    //     throw error;
-    //   }
-
-    //   console.log('It worked: ' + result);
-    // });
+    if (req.query.prev) {
+      data.upsert(req.query.prev, { url: uri }, function(error, result) {
+        if (error) {
+          throw error;
+        }
+      });
+    }
 
     contentType = response.headers['content-type'];
 
