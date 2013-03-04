@@ -31,7 +31,9 @@ exports.list = function(req, res, next) {
   console.log(uri);
 
   request.get(uri, function(error, response, body) {
-    var $, links,
+    var query = req.query.q,
+        pathname  = url.parse(req.url).pathname,
+        $, links,
         contentType;
 
     if (error) {
@@ -39,7 +41,9 @@ exports.list = function(req, res, next) {
       return next(error);
     }
 
+    // Did we come from another list on listlinks?
     if (req.query.prev) {
+      // update popular counts
       data.upsert(req.query.prev, { url: uri }, function(error, result) {
         if (error) {
           throw error;
@@ -47,7 +51,7 @@ exports.list = function(req, res, next) {
       });
 
       // Redirect without query
-      return res.redirect(url.parse(req.url).pathname);
+      return res.redirect(pathname);
     }
 
     // contentType = response.headers['content-type'];
@@ -68,12 +72,13 @@ exports.list = function(req, res, next) {
           text = $link.html()
           src = $link.find('img').first().attr('src');
 
+      // resolve urls
       href = url.resolve(uri, href);
-
       if (src) {
         src = url.resolve(uri, src);
       }
 
+      // Remove html elements
       text = text.replace(/<(?:.|\n)*?>/gm, ' ');
 
       // Use href if link is empty
@@ -82,12 +87,6 @@ exports.list = function(req, res, next) {
       }
 
       href = '/' + href;
-
-      // links.push({
-      //   href: '/' + href,
-      //   text: text,
-      //   src: src
-      // });
 
       // Use map to prevent dups
       links[href] = {
@@ -102,27 +101,37 @@ exports.list = function(req, res, next) {
       return data;
     });
 
-    if (req.query.q) {
-      links = fuzzy.filter(req.query.q, links, {
+    // Is there a search query?
+    if (query) {
+      // Fuzzy search
+      links = fuzzy.filter(query, links, {
         extract: function(el) {
           return el.text;
         }
       });
 
+      // Get the originals
       links = _.map(links, function(link) {
         return link.original;
       });
+    } else if (typeof query !== "undefined" && query !== null) {
+      // Redirect to remove q query in case of ?q=
+      return res.redirect(pathname);
     }
 
+    // Get list of popular links
     data.readPopular(uri, function(error, popular) {
       if (error) {
         throw error;
       }
       console.log(popular);
+
+      // Render  the pages
       res.render('list', {
         uri: uri,
         links: links,
-        popular: popular
+        popular: popular,
+        query: query
       });
     });
 
