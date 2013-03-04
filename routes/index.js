@@ -1,11 +1,11 @@
 var _ = require('lodash'),
+    fuzzy = require('fuzzy'),
     url = require('url'),
     request = require('request'),
     cheerio = require('cheerio'),
     data = require('../data');
 
 exports.index = function(req, res) {
-  console.log('here');
   res.render('index');
 };
 
@@ -81,8 +81,6 @@ exports.list = function(req, res, next) {
         text = href;
       }
 
-      console.log('text: ' + text);
-
       href = '/' + href;
 
       // links.push({
@@ -103,6 +101,18 @@ exports.list = function(req, res, next) {
       data.href = href;
       return data;
     });
+
+    if (req.query.q) {
+      links = fuzzy.filter(req.query.q, links, {
+        extract: function(el) {
+          return el.text;
+        }
+      });
+
+      links = _.map(links, function(link) {
+        return link.original;
+      });
+    }
 
     data.readPopular(uri, function(error, popular) {
       if (error) {
