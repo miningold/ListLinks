@@ -50,14 +50,14 @@ exports.list = function(req, res, next) {
       return res.redirect(url.parse(req.url).pathname);
     }
 
-    contentType = response.headers['content-type'];
+    // contentType = response.headers['content-type'];
 
-    if (contentType.indexOf('image') != -1) {
-      // TODO (tylor): Draw image instead of list
-      console.log('draw image');
-      res.end();
-      return;
-    }
+    // if (contentType.indexOf('image') != -1) {
+    //   // TODO (tylor): Draw image instead of list
+    //   console.log('draw image');
+    //   res.end();
+    //   return;
+    // }
 
     $ = cheerio.load(body);
     links = {};
@@ -81,6 +81,7 @@ exports.list = function(req, res, next) {
         text = href;
       }
 
+      console.log('text: ' + text);
 
       href = '/' + href;
 
