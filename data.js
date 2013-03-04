@@ -100,14 +100,26 @@ exports.upsert = function(collectionName, params, next) {
   });
 };
 
-exports.readAll = function(collectionName, next) {
+// exports.readAll = function(collectionName, next) {
+//   connect(function(db) {
+//     var collection = db.collection(collectionName);
+
+//     collection.find().toArray(function(err, result) {
+//       db.close();
+
+//       next(err, result);
+//     });
+//   });
+// };
+
+exports.readPopular = function(collectionName, next) {
   connect(function(db) {
     var collection = db.collection(collectionName);
 
-    collection.find().toArray(function(err, result) {
+    collection.find().sort({count: -1}).limit(3).toArray(function(err, result) {
       db.close();
 
       next(err, result);
     });
   });
-};
+}

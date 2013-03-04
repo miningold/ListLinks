@@ -106,10 +106,15 @@ exports.list = function(req, res, next) {
       });
     });
 
-    res.render('list', {
-      uri: uri,
-      links: links
+    data.readPopular(uri, function(error, popular) {
+      console.log(popular);
+      res.render('list', {
+        uri: uri,
+        links: links,
+        popular: popular
+      });
     });
+
   });
 
 };
