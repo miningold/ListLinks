@@ -99,6 +99,8 @@ exports.list = function(req, res, next) {
         text = href;
       }
 
+      text = text.replace(/<(?:.|\n)*?>/gm, ' ');
+
       links.push({
         href: '/' + href,
         text: text,
