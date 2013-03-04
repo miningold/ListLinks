@@ -27,7 +27,7 @@ exports.list = function(req, res, next) {
     uri = param;
   }
 
-
+  console.log(uri);
 
   url = parse(uri);
 
