@@ -56,6 +56,7 @@ hbs.registerHelper('partial', function(name, options) {
 // Handlebar Partials
 
 hbs.registerPartial('base', fs.readFileSync(__dirname + '/views/base.hbs', 'utf8'));
+hbs.registerPartial('libraries', fs.readFileSync(__dirname + '/views/libraries.hbs', 'utf8'));
 
 /////////////////////////////////////////////////
 // Config express
