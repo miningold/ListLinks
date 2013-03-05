@@ -88,6 +88,7 @@ app.get('/', routes.index);
 app.post('/', routes.index);
 
 app.get('/*', routes.list);
+app.post('/*', routes.updateCount);
 
 
 

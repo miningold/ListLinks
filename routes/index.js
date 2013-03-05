@@ -9,13 +9,20 @@ exports.index = function(req, res) {
   res.render('index');
 };
 
+exports.updateCount = function(req, res, next) {
+  data.upsert(req.url.substring(1), { url: req.body.target }, function(error, result) {
+    if (error) {
+      throw error;
+    }
+    res.send({ status: result });
+  });
+};
+
 exports.list = function(req, res, next) {
   var uri = req.url.substring(1),
       protocol = /^https?:\/\//,
       asdf = '',
       uri;
-
-
 
   if (uri === '') {
     res.render('index');
@@ -143,6 +150,7 @@ exports.list = function(req, res, next) {
       var json = JSON.stringify(links);
       json = json.replace(/\\n/g, '');
       json = json.replace(/\\t/g, ' ');
+      json = json.replace(/\\/g, '\\\\');
       json = json.replace(/\"/g, '\\\"');
 
       // Render  the pages

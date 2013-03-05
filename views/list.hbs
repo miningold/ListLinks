@@ -116,19 +116,24 @@
       updateList,
       updatecount;
 
-  updateCount = function() {
-    var target = $(this).attr('href');
+  // updateCount = function() {
 
-    // $.ajax({
-    //   dataType: 'json',
-    //   type: 'GET',
-    //   url: '/' + currentUrl,
-    //   data: { target: target },
-    //   success: function(result) {
-    //     console.log(result);
-    //   }
-    // });
-  };
+  //   var target = $(this).attr('href');
+
+  //   console.log('clicked it');
+
+  //   $.ajax({
+  //     dataType: 'json',
+  //     type: 'POST',
+  //     url: '/' + currentUrl,
+  //     data: { target: target },
+  //     success: function(result) {
+  //       console.log(result);
+  //     }
+  //   });
+
+  //   return false;
+  // };
 
   updateList = function(list) {
     var link,
@@ -141,7 +146,27 @@
       $a = $('<a>')
         .attr('href', link.href)
         .append($h2)
-        .click(updateCount);
+        .click(function(event) {
+          var target = $(this).attr('href').substring(1);
+          event.preventDefault();
+
+          $.ajax({
+            dataType: 'json',
+            type: 'POST',
+            url: '/' + currentUrl,
+            data: { target: target },
+            success: function(result) {
+              // console.log(result);
+            },
+            error: function(jqXhr, status, error) {
+              // console.log(status);
+              // console.log(error);
+            }
+          });
+
+          window.location = '/' + target;
+        });
+
       $li = $('<li>').append($a);
 
       if (link.src) {
@@ -153,6 +178,10 @@
       }
 
       $linklist.append($li);
+
+      $('#links a')
+
+
     }
   }
 
@@ -173,16 +202,14 @@
     </li> -->
 
 <div class="wrapper">
-  <ul id="links">
-
-  </ul>
+  <ul id="links"></ul>
 </div>
 
 <script>
-console.log('loaded')
+console.log('loaded');
 $('.option').click(function() {
   this.toggleClass('selected');
-  console.log("clicked")
+  console.log("clicked");
 });
 </script>
 
