@@ -147,11 +147,16 @@
   }
 
   .search form {
-    margin-top: 17px;
+    margin-top: 10px;
   }
 
   .search input {
-    width: 70%;
+    width: 60%;
+    font-size: 1.5em;
+  }
+
+  .search button {
+    font-size: 1.5em;
   }
 
   .sort {
@@ -159,20 +164,34 @@
   }
 
   .sort-option {
+    color: #444;
     display: inline-block;
-    width: 20%;
-    margin: 10px 5%;
-    background: #FFFFFF;
-    background: -webkit-linear-gradient(#FFFFFF, #D6D6D6);
+    width: 25%;
+    margin: 10px 2%;
+    background: #F0F0F0;
     padding: 5px;
-    border: 1px solid #888;
     border-radius: 5px;
+    -webkit-box-shadow: 2px 2px rgba(0,0,0,0.2);
+    -moz-box-shadow: 2px 2px rgba(0,0,0,0.2);
+    box-shadow: 2px 2px rgba(0,0,0,0.2);
+    font-weight: bold;
+    -webkit-transition: 0.1s;
+    box-sizing: border-box;
+
+    cursor: pointer;
   }
 
   .sort-option.selected {
-    -webkit-box-shadow: none;
+    /*-webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
+    background: #8F8F8F;
+    color: #FFFFFF;
+    border: none;*/
+    background: #1D73F3;
+    color: #FFFFFF;
+
+    cursor: auto;
   }
 
 </style>
@@ -337,6 +356,13 @@ $(function() {
   });
   $('#sort').click(function() {
     toggleOptions('sort');
+  });
+
+  $('.sort-option').click(function() {
+    if(!$(this).hasClass('selected')) {
+      $('.sort-option').removeClass('selected');
+      $(this).addClass('selected');
+    }
   });
 
 });
