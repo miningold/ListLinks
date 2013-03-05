@@ -56,6 +56,11 @@
 
 {{#partial "content"}}
 
+<script>
+  var json = "{{{json}}}";
+  console.log(json);
+</script>
+
 <div class="wrapper">
   <div class="main">
 
@@ -67,7 +72,7 @@
     <a href="{{uri}}" target="_blank">View Current Page</a>
     <ul>
     {{#each links}}
-      <li><a href="{{href}}?prev={{../uri}}" style="background: url('{{src}}');">
+      <li><a href="{{href}}" style="background: url('{{src}}');">
         {{#if src}}
         {{/if}}
         {{{text}}}
