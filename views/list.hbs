@@ -141,7 +141,7 @@
 
     for (i = 0, len = list.length; i < len; i++) {
       link = list[i];
-
+//
       $h2 = $('<h2>').html(link.text);
       $a = $('<a>')
         .attr('href', link.href)
@@ -156,15 +156,14 @@
             url: '/' + currentUrl,
             data: { target: target },
             success: function(result) {
-              // console.log(result);
+              console.log(result);
+              window.location = '/' + target;
             },
             error: function(jqXhr, status, error) {
               // console.log(status);
               // console.log(error);
             }
           });
-
-          window.location = '/' + target;
         });
 
       $li = $('<li>').append($a);
