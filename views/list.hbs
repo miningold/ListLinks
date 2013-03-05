@@ -235,29 +235,7 @@
     $linklist = $('#links');
     links = JSON.parse(json);
 
-    $('#search-form').submit(function(event) {
-      event.preventDefault();
-
-      // var query = $(this).find('input[name=query]').val().trim();
-
-      // if (query) {
-      //   console.log(query);
-
-      //   var list = fuzzy.filter(query, links, {
-      //     extract: function(el) {
-      //       return el.text;
-      //     }
-      //   });
-
-      //   console.log(list);
-      // }
-    });
-
-    $('#query').keyup(function(event) {
-      var query = $(this).val();
-
-      console.log(query);
-
+    var search = function(query) {
       var list = fuzzy.filter(query, links, {
         extract: function(el) {
           return el.text;
@@ -269,6 +247,23 @@
       console.log(list);
 
       updateList(list);
+    };
+
+    $('#search-form').submit(function(event) {
+      event.preventDefault();
+
+      var $input = $(this).find('input')
+      var query = $input.val();
+
+      search(query);
+
+      $input.blur();
+    });
+
+    $('#query').keyup(function(event) {
+      var query = $(this).val();
+
+      search(query);
     });
 
     updateList(links);
