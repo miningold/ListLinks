@@ -257,7 +257,7 @@
 
       $linklist.append($li);
     }
-  }
+  };
 
   $(function() {
     $linklist = $('#links');
@@ -288,10 +288,14 @@
       $input.blur();
     });
 
+    var searchTimerId;
+    var wait = 500;
+
     $('#query').keyup(function(event) {
       var query = $(this).val();
 
-      search(query);
+      clearTimeout(searchTimerId);
+      searchTimerId = setTimeout(search, wait, query);
     });
 
     updateList(links);

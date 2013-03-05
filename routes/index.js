@@ -129,6 +129,7 @@ exports.list = function(req, res, next) {
 
       // Convert map to array
       links = _.map(links, function(data, href) {
+        // console.log(href);
         data.href = href;
         return data;
       });
