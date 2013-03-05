@@ -83,6 +83,8 @@ exports.list = function(req, res, next) {
         src = url.resolve(uri, src);
       }
 
+      href = href.split('#')[0];
+
       // Remove html elements from text
       text = text.replace(/<(?:.|\n)*?>/gm, ' ');
 
