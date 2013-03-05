@@ -4,6 +4,7 @@
 
   html, body {
     margin: 0;
+    overflow-x: hidden;
   }
 
   body {
@@ -62,26 +63,39 @@
   .footer {
     width: 100%;
     height: 40px;
-    padding: 8px;
+    padding: 0 0;
     box-sizing: border-box;
     position: fixed;
     bottom: 0;
     left: 0;
-    background: #BBBDC0;
+    background: #484A4F;
     -webkit-box-shadow: 0 -2px 3px rgba(0,0,0,0.1);
     -moz-box-shadow: 0 -2px 3px rgba(0,0,0,0.1);
     box-shadow: 0 -2px 3px rgba(0,0,0,0.1);
   }
 
-  form, footer a {
+  .option {
     display: inline-block;
+    height: 40px;
+    width: 33.33%;
+    padding-top: 8px;
+    text-align: center;
+    box-sizing: border-box;
+    border-left: 1px solid #333;
+    border-top: 1px solid #333;
+    color: #FFFFFF;
+    font-weight: bold;
+    cursor: pointer;
   }
 
-  footer a {
-    height: 50px;
-    width: 50px;
-    background: #FFFFFF;
-    /*background: ;*/
+  .option.selected {
+    background: #E2E2E2;
+    color: #404040;
+  }
+
+  .footer a {
+    text-decoration: none;
+    color: #FFFFFF;
   }
 
 </style>
@@ -105,13 +119,24 @@
   </ul>
 </div>
 
+<script>
+console.log('loaded')
+$('.option').click(function() {
+  this.toggleClass('selected');
+  console.log("clicked")
+});
+</script>
+
 <div class="footer">
-  <form class="search">
+  <!-- <form class="search">
     <input type="text" name="q" placeholder="Search links">
     <button type="submit">Search</button>
   </form>
 
-  <a href="{{uri}}" target="_blank"></a>
+  <a href="{{uri}}" target="_blank">More</a> -->
+  <div class="option selected" id="search">Search
+  </div><div class="option" id="sort">Sort
+  </div><div class="option"><a href="{{uri}}" target="_blank">Current</a></div>
 </div>
 
 {{/partial}}
