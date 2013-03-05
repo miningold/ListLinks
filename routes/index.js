@@ -78,7 +78,9 @@ exports.list = function(req, res, next) {
       var $link = $(a),
           href = $link.attr('href'),
           text = $link.html()
-          src = $link.find('img').first().attr('src');
+          $image = $link.find('img').first(),
+          src = $image.attr('src')
+          alt = $image.attr('alt');
 
       if (!href) {
         return;
@@ -98,6 +100,10 @@ exports.list = function(req, res, next) {
 
       // Use href if link is empty
       if (text.trim() === '') {
+        text = alt;
+      }
+
+      if (!text || text.trim() === '') {
         text = href;
       }
 
