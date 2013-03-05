@@ -91,9 +91,12 @@
 {{> libraries}}
 
 <script>
-  var json = "{{{json}}}",
-      currentUrl = "{{{uri}}}",
-      links = JSON.parse(json),
+  var json = "{{{json}}}";
+
+  // console.log(json);
+
+  var currentUrl = "{{{uri}}}",
+      links,
       $linklist,
       i, len,
       updateList,
@@ -118,7 +121,6 @@
         $li, $a, $h2;
 
     for (i = 0, len = list.length; i < len; i++) {
-      console.log('here');
       link = list[i];
 
       $h2 = $('<h2>').html(link.text);
@@ -142,6 +144,7 @@
 
   $(function() {
     $linklist = $('#links');
+    links = JSON.parse(json);
 
     updateList(links);
 
