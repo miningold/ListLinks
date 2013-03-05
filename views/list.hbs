@@ -188,6 +188,8 @@
     var link,
         $li, $a, $h2;
 
+    $linklist.empty();
+
     for (i = 0, len = list.length; i < len; i++) {
       link = list[i];
 
@@ -226,16 +228,48 @@
       }
 
       $linklist.append($li);
-
-      $('#links a')
-
-
     }
   }
 
   $(function() {
     $linklist = $('#links');
     links = JSON.parse(json);
+
+    $('#search-form').submit(function(event) {
+      event.preventDefault();
+
+      // var query = $(this).find('input[name=query]').val().trim();
+
+      // if (query) {
+      //   console.log(query);
+
+      //   var list = fuzzy.filter(query, links, {
+      //     extract: function(el) {
+      //       return el.text;
+      //     }
+      //   });
+
+      //   console.log(list);
+      // }
+    });
+
+    $('#query').keyup(function(event) {
+      var query = $(this).val();
+
+      console.log(query);
+
+      var list = fuzzy.filter(query, links, {
+        extract: function(el) {
+          return el.text;
+        }
+      });
+
+      list = list.map(function(el) { return el.original; });
+
+      console.log(list);
+
+      updateList(list);
+    });
 
     updateList(links);
 
@@ -282,15 +316,9 @@ $(function() {
 </script>
 
 <div class="footer">
-  <!-- <form class="search">
-    <input type="text" name="q" placeholder="Search links">
-    <button type="submit">Search</button>
-  </form>
-
-  <a href="{{uri}}" target="_blank">More</a> -->
   <div class="search">
-    <form>
-      <input type="text" name="q" placeholder="Search links">
+    <form id="search-form">
+      <input type="text" id="query" name="query" placeholder="Search links">
       <button type="submit">Search</button>
     </form>
   </div>
