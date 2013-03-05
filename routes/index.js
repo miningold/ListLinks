@@ -125,10 +125,20 @@ exports.list = function(req, res, next) {
         throw error;
       }
 
+      // console.log(popular);
+
+      popular = _.map(popular, function(obj) {
+        return '/' + obj.url;
+      });
+
       console.log(popular);
 
       // Convert map to array
       links = _.map(links, function(data, href) {
+        if (_.contains(popular, href)) {
+          console.log(true);
+        }
+        // console.log(href);
         data.href = href;
         return data;
       });
@@ -144,8 +154,8 @@ exports.list = function(req, res, next) {
       res.render('list', {
         json: json,
         uri: uri,
-        links: links,
-        popular: popular
+        // links: links,
+        // popular: popular
       });
     });
 
