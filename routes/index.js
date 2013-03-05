@@ -44,6 +44,10 @@ exports.list = function(req, res, next) {
       return res.render('404', { url: uri });
     }
 
+    // update evaluated uri
+    uri = response.request.uri.href;
+    console.log(uri);
+
     $ = cheerio.load(body);
     links = {};
 

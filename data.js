@@ -13,7 +13,7 @@ var generateUrl = function(obj) {
   } else {
     return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
   }
-}
+};
 
 exports.init = function(config) {
   mongoURL = generateUrl(config);
