@@ -154,41 +154,67 @@
 {{> libraries}}
 
 <script>
-  var json = "{{{json}}}",
-      currentUrl = "{{{uri}}}",
-      links = JSON.parse(json),
+  var json = "{{{json}}}";
+
+  // console.log(json);
+
+  var currentUrl = "{{{uri}}}",
+      links,
       $linklist,
       i, len,
       updateList,
       updatecount;
 
-  updateCount = function() {
-    var target = $(this).attr('href');
+  // updateCount = function() {
 
-    // $.ajax({
-    //   dataType: 'json',
-    //   type: 'GET',
-    //   url: '/' + currentUrl,
-    //   data: { target: target },
-    //   success: function(result) {
-    //     console.log(result);
-    //   }
-    // });
-  };
+  //   var target = $(this).attr('href');
+
+  //   console.log('clicked it');
+
+  //   $.ajax({
+  //     dataType: 'json',
+  //     type: 'POST',
+  //     url: '/' + currentUrl,
+  //     data: { target: target },
+  //     success: function(result) {
+  //       console.log(result);
+  //     }
+  //   });
+
+  //   return false;
+  // };
 
   updateList = function(list) {
     var link,
         $li, $a, $h2;
 
     for (i = 0, len = list.length; i < len; i++) {
-      console.log('here');
       link = list[i];
 
       $h2 = $('<h2>').html(link.text);
       $a = $('<a>')
         .attr('href', link.href)
         .append($h2)
-        .click(updateCount);
+        .click(function(event) {
+          var target = $(this).attr('href').substring(1);
+          event.preventDefault();
+
+          $.ajax({
+            dataType: 'json',
+            type: 'POST',
+            url: '/' + currentUrl,
+            data: { target: target },
+            success: function(result) {
+              console.log(result);
+              window.location = '/' + target;
+            },
+            error: function(jqXhr, status, error) {
+              // console.log(status);
+              // console.log(error);
+            }
+          });
+        });
+
       $li = $('<li>').append($a);
 
       if (link.src) {
@@ -200,11 +226,16 @@
       }
 
       $linklist.append($li);
+
+      $('#links a')
+
+
     }
   }
 
   $(function() {
     $linklist = $('#links');
+    links = JSON.parse(json);
 
     updateList(links);
 
@@ -219,9 +250,7 @@
     </li> -->
 
 <div class="wrapper">
-  <ul id="links">
-
-  </ul>
+  <ul id="links"></ul>
 </div>
 
 <script>
@@ -248,7 +277,8 @@ $(function() {
     toggleOptions('sort');
   });
 
-})
+});
+
 </script>
 
 <div class="footer">

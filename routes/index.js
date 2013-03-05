@@ -9,13 +9,20 @@ exports.index = function(req, res) {
   res.render('index');
 };
 
+exports.updateCount = function(req, res, next) {
+  data.upsert(req.url.substring(1), { url: req.body.target }, function(error, result) {
+    if (error) {
+      throw error;
+    }
+    res.send({ status: result });
+  });
+};
+
 exports.list = function(req, res, next) {
   var uri = req.url.substring(1),
       protocol = /^https?:\/\//,
       asdf = '',
       uri;
-
-
 
   if (uri === '') {
     res.render('index');
@@ -38,8 +45,7 @@ exports.list = function(req, res, next) {
         contentType;
 
     if (error) {
-      console.dir(error);
-      return next(error);
+      return res.render('404', { url: uri });
     }
 
     // Did we come from another list on listlinks?
@@ -71,7 +77,9 @@ exports.list = function(req, res, next) {
       var $link = $(a),
           href = $link.attr('href'),
           text = $link.html()
-          src = $link.find('img').first().attr('src');
+          $image = $link.find('img').first(),
+          src = $image.attr('src')
+          alt = $image.attr('alt');
 
       if (!href) {
         return;
@@ -91,6 +99,10 @@ exports.list = function(req, res, next) {
 
       // Use href if link is empty
       if (text.trim() === '') {
+        text = alt;
+      }
+
+      if (!text || text.trim() === '') {
         text = href;
       }
 
@@ -107,26 +119,6 @@ exports.list = function(req, res, next) {
       };
     });
 
-    // convert map to array
-
-    // Is there a search query?
-    // if (query) {
-    //   // Fuzzy search
-    //   links = fuzzy.filter(query, links, {
-    //     extract: function(el) {
-    //       return el.text;
-    //     }
-    //   });
-
-    //   // Get the originals
-    //   links = _.map(links, function(link) {
-    //     return link.original;
-    //   });
-    // } else if (typeof query !== "undefined" && query !== null) {
-    //   // Redirect to remove q query in case of ?q=
-    //   return res.redirect(pathname);
-    // }
-
     // Get list of popular links
     data.readPopular(uri, function(error, popular) {
       if (error) {
@@ -135,13 +127,18 @@ exports.list = function(req, res, next) {
 
       console.log(popular);
 
+      // Convert map to array
       links = _.map(links, function(data, href) {
         data.href = href;
         return data;
       });
 
+      // Convert to json and clean up
       var json = JSON.stringify(links);
-      json = json.replace(/"/g, "\\\"");
+      json = json.replace(/\\n/g, '');
+      json = json.replace(/\\t/g, ' ');
+      json = json.replace(/\\/g, '\\\\');
+      json = json.replace(/\"/g, '\\\"');
 
       // Render  the pages
       res.render('list', {
