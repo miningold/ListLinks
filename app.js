@@ -9,7 +9,9 @@ var express = require('express'),
     routes = require('./routes'),
     http = require('http'),
     path = require('path'),
-    app = express();
+    app = express(),
+    data = require('./data'),
+    mongo;
 
 /////////////////////////////////////////////////
 // Config Handlebars
@@ -77,7 +79,19 @@ app.configure(function() {
 
 app.configure('development', function() {
   app.use(express.errorHandler());
+  mongo = {
+    hostname: 'localhost',
+    port: '27017',
+    db: 'listlinks'
+  };
 });
+
+app.configure('production', function() {
+  var env = JSON.parse(process.env.VCAP_SERVICES);
+  mongo = env['mongodb-1.8'][0]['credentials'];
+});
+
+data.init(mongo);
 
 ///////////////////////////////////////////////////
 // Routes

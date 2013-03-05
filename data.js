@@ -1,8 +1,23 @@
 var _ = require('lodash'),
     MongoClient = require('mongodb').MongoClient,
-    port = process.env.VCAP_SERVICES || 27017,
-    mongoURL = 'mongodb://localhost:' + port + '/listlinks',
+    port = 27017,
+    mongoURL,
     connect;
+
+var generateUrl = function(obj) {
+  obj.hostname = (obj.hostname || 'localhost');
+  obj.port = (obj.port || 27017);
+  obj.db = (obj.db || 'test');
+  if (obj.username && obj.password){
+    return "mongodb://" + obj.username + ":" + obj.password + "@" + obj.hostname + ":" + obj.port + "/" + obj.db;
+  } else {
+    return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db;
+  }
+}
+
+exports.init = function(config) {
+  mongoURL = generateUrl(config);
+};
 
 connect = function(callback) {
   MongoClient.connect(mongoURL, function(err, db) {
