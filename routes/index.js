@@ -45,8 +45,7 @@ exports.list = function(req, res, next) {
         contentType;
 
     if (error) {
-      console.dir(error);
-      return next(error);
+      return res.render('404', { url: uri });
     }
 
     // Did we come from another list on listlinks?
@@ -120,26 +119,6 @@ exports.list = function(req, res, next) {
       };
     });
 
-    // convert map to array
-
-    // Is there a search query?
-    // if (query) {
-    //   // Fuzzy search
-    //   links = fuzzy.filter(query, links, {
-    //     extract: function(el) {
-    //       return el.text;
-    //     }
-    //   });
-
-    //   // Get the originals
-    //   links = _.map(links, function(link) {
-    //     return link.original;
-    //   });
-    // } else if (typeof query !== "undefined" && query !== null) {
-    //   // Redirect to remove q query in case of ?q=
-    //   return res.redirect(pathname);
-    // }
-
     // Get list of popular links
     data.readPopular(uri, function(error, popular) {
       if (error) {
@@ -148,11 +127,13 @@ exports.list = function(req, res, next) {
 
       console.log(popular);
 
+      // Convert map to array
       links = _.map(links, function(data, href) {
         data.href = href;
         return data;
       });
 
+      // Convert to json and clean up
       var json = JSON.stringify(links);
       json = json.replace(/\\n/g, '');
       json = json.replace(/\\t/g, ' ');
