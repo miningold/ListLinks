@@ -89,7 +89,6 @@
     display: inline-block;
     height: 60px;
     width: 33.33%;
-    padding-top: 18px;
     text-align: center;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -119,9 +118,17 @@
     border-top: none;
   }
 
+  .footer h4 {
+    margin: 0;
+    line-height: 60px;
+  }
+
   .footer a {
     text-decoration: none;
     color: #FFFFFF;
+    height: 100%;
+    width: 100%;
+    display: block;
   }
 
   .search, .sort {
@@ -145,6 +152,27 @@
 
   .search input {
     width: 70%;
+  }
+
+  .sort {
+    text-align: center;
+  }
+
+  .sort-option {
+    display: inline-block;
+    width: 20%;
+    margin: 10px 5%;
+    background: #FFFFFF;
+    background: -webkit-linear-gradient(#FFFFFF, #D6D6D6);
+    padding: 5px;
+    border: 1px solid #888;
+    border-radius: 5px;
+  }
+
+  .sort-option.selected {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
   }
 
 </style>
@@ -318,12 +346,18 @@ $(function() {
     </form>
   </div>
   <div class="sort">
-    Sort Here
+    <div class="sort-option">ABC</div>
+    <div class="sort-option">ZYX</div>
+    <div class="sort-option selected">None</div>
   </div>
 
-  <div class="option" id="search">Search
-  </div><div class="option" id="sort">Sort
-  </div><div class="option"><a href="{{uri}}" target="_blank">View Page</a></div>
+  <div class="option" id="search">
+    <h4>Search</h4>
+  </div><div class="option" id="sort">
+    <h4>Sort</h4>
+  </div><div class="option">
+    <a href="{{uri}}" target="_blank"><h4>View Page</h4></a>
+  </div>
 </div>
 
 {{/partial}}
