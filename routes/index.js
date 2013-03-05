@@ -10,30 +10,31 @@ exports.index = function(req, res) {
 };
 
 exports.list = function(req, res, next) {
-  var param = req.params[0],
+  var uri = req.url.substring(1),
       protocol = /^https?:\/\//,
+      asdf = '',
       uri;
 
-  param = param.trim();
 
-  if (param === '') {
+
+  if (uri === '') {
     res.render('index');
     return;
   }
 
   // Add protocol to uri
-  if (!protocol.test(param)) {
-    uri = 'http://' + param;
-  } else {
-    uri = param;
+  if (!protocol.test(uri)) {
+    uri = 'http://' + uri;
   }
 
   console.log(uri);
 
+  // uri += query;
+
+  // console.log(uri);
+
   request.get(uri, function(error, response, body) {
-    var query = req.query.q,
-        pathname  = url.parse(req.url).pathname,
-        $, links,
+    var $, links,
         contentType;
 
     if (error) {
@@ -42,17 +43,17 @@ exports.list = function(req, res, next) {
     }
 
     // Did we come from another list on listlinks?
-    if (req.query.prev) {
-      // update popular counts
-      data.upsert(req.query.prev, { url: uri }, function(error, result) {
-        if (error) {
-          throw error;
-        }
-      });
+    // if (req.query.prev) {
+    //   // update popular counts
+    //   data.upsert(req.query.prev, { url: uri }, function(error, result) {
+    //     if (error) {
+    //       throw error;
+    //     }
+    //   });
 
-      // Redirect without query
-      return res.redirect(pathname);
-    }
+    //   // Redirect without query
+    //   return res.redirect(pathname);
+    // }
 
     // contentType = response.headers['content-type'];
 
@@ -72,18 +73,26 @@ exports.list = function(req, res, next) {
           text = $link.html()
           src = $link.find('img').first().attr('src');
 
+      if (!href) {
+        return;
+      }
+
       // resolve urls
       href = url.resolve(uri, href);
       if (src) {
         src = url.resolve(uri, src);
       }
 
-      // Remove html elements
+      // Remove html elements from text
       text = text.replace(/<(?:.|\n)*?>/gm, ' ');
 
       // Use href if link is empty
       if (text.trim() === '') {
         text = href;
+      }
+
+      if (href === uri) {
+        return;
       }
 
       href = '/' + href;
@@ -96,42 +105,47 @@ exports.list = function(req, res, next) {
     });
 
     // convert map to array
-    links = _.map(links, function(data, href) {
-      data.href = href;
-      return data;
-    });
 
     // Is there a search query?
-    if (query) {
-      // Fuzzy search
-      links = fuzzy.filter(query, links, {
-        extract: function(el) {
-          return el.text;
-        }
-      });
+    // if (query) {
+    //   // Fuzzy search
+    //   links = fuzzy.filter(query, links, {
+    //     extract: function(el) {
+    //       return el.text;
+    //     }
+    //   });
 
-      // Get the originals
-      links = _.map(links, function(link) {
-        return link.original;
-      });
-    } else if (typeof query !== "undefined" && query !== null) {
-      // Redirect to remove q query in case of ?q=
-      return res.redirect(pathname);
-    }
+    //   // Get the originals
+    //   links = _.map(links, function(link) {
+    //     return link.original;
+    //   });
+    // } else if (typeof query !== "undefined" && query !== null) {
+    //   // Redirect to remove q query in case of ?q=
+    //   return res.redirect(pathname);
+    // }
 
     // Get list of popular links
     data.readPopular(uri, function(error, popular) {
       if (error) {
         throw error;
       }
+
       console.log(popular);
+
+      links = _.map(links, function(data, href) {
+        data.href = href;
+        return data;
+      });
+
+      var json = JSON.stringify(links);
+      json = json.replace(/"/g, "\\\"");
 
       // Render  the pages
       res.render('list', {
+        json: json,
         uri: uri,
         links: links,
-        popular: popular,
-        query: query
+        popular: popular
       });
     });
 
