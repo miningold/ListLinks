@@ -88,20 +88,76 @@
 
 {{#partial "content"}}
 
+{{> libraries}}
+
 <script>
-  var json = "{{{json}}}";
-  console.log(json);
+  var json = "{{{json}}}",
+      currentUrl = "{{{uri}}}",
+      links = JSON.parse(json),
+      $linklist,
+      i, len,
+      updateList,
+      updatecount;
+
+  updateCount = function() {
+    var target = $(this).attr('href');
+
+    // $.ajax({
+    //   dataType: 'json',
+    //   type: 'GET',
+    //   url: '/' + currentUrl,
+    //   data: { target: target },
+    //   success: function(result) {
+    //     console.log(result);
+    //   }
+    // });
+  };
+
+  updateList = function(list) {
+    var link,
+        $li, $a, $h2;
+
+    for (i = 0, len = list.length; i < len; i++) {
+      console.log('here');
+      link = list[i];
+
+      $h2 = $('<h2>').html(link.text);
+      $a = $('<a>')
+        .attr('href', link.href)
+        .append($h2)
+        .click(updateCount);
+      $li = $('<li>').append($a);
+
+      if (link.src) {
+        $li
+          .addClass('image')
+          .css({
+            'background-image': "url('" + link.src + "')"
+          });
+      }
+
+      $linklist.append($li);
+    }
+  }
+
+  $(function() {
+    $linklist = $('#links');
+
+    updateList(links);
+
+    console.log(currentUrl);
+  });
 </script>
 
-<div class="wrapper">
-  <ul>
-  {{#each links}}
-    <li {{#if src}}class="image" style="background-image: url('{{src}}');"{{/if}}>
+<!-- <li #if srcclass="image" style="background-image: url('{{src}}');"/if>
       <a href="{{href}}">
-        <h2>{{{text}}}</h2>
+        <h2>text</h2>
       </a>
-    </li>
-  {{/each}}
+    </li> -->
+
+<div class="wrapper">
+  <ul id="links">
+
   </ul>
 </div>
 

@@ -83,6 +83,7 @@ exports.list = function(req, res, next) {
         src = url.resolve(uri, src);
       }
 
+      // Ignore everything after the hashmark
       href = href.split('#')[0];
 
       // Remove html elements from text
