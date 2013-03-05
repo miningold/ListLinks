@@ -194,6 +194,64 @@
     cursor: auto;
   }
 
+  /*.star {
+     margin: 50px 0;
+     position: relative;
+     display: block;
+     color: red;
+     width: 0px;
+     height: 0px;
+     border-right:  100px solid transparent;
+     border-bottom: 70px  solid red;
+     border-left:   100px solid transparent;
+     -moz-transform:    rotate(35deg);
+     -webkit-transform: rotate(35deg);
+     -ms-transform:     rotate(35deg);
+     -o-transform:      rotate(35deg);
+  }
+  .star:before {
+     border-bottom: 80px solid red;
+     border-left: 30px solid transparent;
+     border-right: 30px solid transparent;
+     position: absolute;
+     height: 0;
+     width: 0;
+     top: -45px;
+     left: -65px;
+     display: block;
+     content: '';
+     -webkit-transform: rotate(-35deg);
+     -moz-transform:    rotate(-35deg);
+     -ms-transform:     rotate(-35deg);
+     -o-transform:      rotate(-35deg);
+
+  }
+  .star:after {
+     position: absolute;
+     display: block;
+     color: red;
+     top: 3px;
+     left: -105px;
+     width: 0px;
+     height: 0px;
+     border-right: 100px solid transparent;
+     border-bottom: 70px solid red;
+     border-left: 100px solid transparent;
+     -webkit-transform: rotate(-70deg);
+     -moz-transform:    rotate(-70deg);
+     -ms-transform:     rotate(-70deg);
+     -o-transform:      rotate(-70deg);
+     content: '';
+  }*/
+
+  .star {
+    position: absolute;
+    background-color: yellow;
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+  }
+
 </style>
 
 {{#partial "content"}}
@@ -201,71 +259,64 @@
 {{> libraries}}
 
 <script>
-  var json = "{{{json}}}";
-
-  // console.log(json);
-
-  var currentUrl = "{{{uri}}}",
-      links,
+  var json = "{{{json}}}",
+      currentUrl = "{{{uri}}}",
+      wait = 500,
       $linklist,
-      i, len,
+      $popularlist,
+      i, len, links,
       updateList,
-      updatecount;
+      updateCount,
+      search,
+      submitQuery,
+      updateQuery,
+      searchTimerId;
 
-  // updateCount = function() {
+  // Update the page visit count then load next page
+  updateCount = function(event) {
+    var target = $(this).attr('href').substring(1);
+    event.preventDefault();
 
-  //   var target = $(this).attr('href');
+    $.ajax({
+      dataType: 'json',
+      type: 'POST',
+      url: '/' + currentUrl,
+      data: { target: target },
+      success: function(result) {
+        console.log(result);
+        window.location = '/' + target;
+      }
+      // ,
+      // error: function(jqXhr, status, error) {
+      //   // console.log(status);
+      //   // console.log(error);
+      // }
+    });
+  };
 
-  //   console.log('clicked it');
-
-  //   $.ajax({
-  //     dataType: 'json',
-  //     type: 'POST',
-  //     url: '/' + currentUrl,
-  //     data: { target: target },
-  //     success: function(result) {
-  //       console.log(result);
-  //     }
-  //   });
-
-  //   return false;
-  // };
-
+  // Updates the list given a list of links
   updateList = function(list) {
     var link,
         $li, $a, $h2;
 
+    // Begin by emptying the lists
     $linklist.empty();
+    $popularlist.empty();
 
     for (i = 0, len = list.length; i < len; i++) {
       link = list[i];
 
+      // Create the elements
       $h2 = $('<h2>').html(link.text);
+      $star = $('<div>');
       $a = $('<a>')
         .attr('href', link.href)
+        .append($star)
         .append($h2)
-        .click(function(event) {
-          var target = $(this).attr('href').substring(1);
-          event.preventDefault();
-
-          $.ajax({
-            dataType: 'json',
-            type: 'POST',
-            url: '/' + currentUrl,
-            data: { target: target },
-            success: function(result) {
-              console.log(result);
-              window.location = '/' + target;
-            },
-            error: function(jqXhr, status, error) {
-              // console.log(status);
-              // console.log(error);
-            }
-          });
-        });
-
+        .click(updateCount);
       $li = $('<li>').append($a);
 
+      // Add image if it exists
       if (link.src) {
         $li
           .addClass('image')
@@ -274,66 +325,62 @@
           });
       }
 
+      // Add li to list
       $linklist.append($li);
+
+      // Clone to popular list if popular
+      if (link.popular) {
+        $star.addClass('star');
+        $li.clone().appendTo($popularlist);
+      }
     }
+  };
+
+  search = function(query) {
+    var list = fuzzy.filter(query, links, {
+      extract: function(el) {
+        return el.text;
+      }
+    });
+
+    list = list.map(function(el) { return el.original; });
+
+    updateList(list);
+  };
+
+  // immediately filter links
+  submitQuery = function(event) {
+    event.preventDefault();
+
+    var $input = $(this).find('input')
+    var query = $input.val();
+
+    search(query);
+
+    // force lose focus
+    $input.blur();
+  };
+
+  // filter links on delay
+  updateQuery = function(event) {
+    var query = $(this).val();
+
+    clearTimeout(searchTimerId);
+    searchTimerId = setTimeout(search, wait, query);
   };
 
   $(function() {
     $linklist = $('#links');
+    $popularlist = $('#popular');
     links = JSON.parse(json);
 
-    var search = function(query) {
-      var list = fuzzy.filter(query, links, {
-        extract: function(el) {
-          return el.text;
-        }
-      });
-
-      list = list.map(function(el) { return el.original; });
-
-      console.log(list);
-
-      updateList(list);
-    };
-
-    $('#search-form').submit(function(event) {
-      event.preventDefault();
-
-      var $input = $(this).find('input')
-      var query = $input.val();
-
-      search(query);
-
-      $input.blur();
-    });
-
-    var searchTimerId;
-    var wait = 500;
-
-    $('#query').keyup(function(event) {
-      var query = $(this).val();
-
-      clearTimeout(searchTimerId);
-      searchTimerId = setTimeout(search, wait, query);
-    });
+    $('#search-form').submit(submitQuery);
+    $('#query').keyup(updateQuery);
 
     updateList(links);
 
     console.log(currentUrl);
   });
-</script>
-
-<!-- <li #if srcclass="image" style="background-image: url('{{src}}');"/if>
-      <a href="{{href}}">
-        <h2>text</h2>
-      </a>
-    </li> -->
-
-<div class="wrapper">
-  <ul id="links"></ul>
-</div>
-
-<script>
 
 var toggleOptions = function(eName) {
   $('.search, .sort').height(0);
@@ -367,6 +414,12 @@ $(function() {
 });
 
 </script>
+
+<div class="wrapper">
+  <ul id="popular"></ul>
+  <hr>
+  <ul id="links"></ul>
+</div>
 
 <div class="footer">
   <div class="search">

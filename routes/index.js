@@ -36,10 +36,6 @@ exports.list = function(req, res, next) {
 
   console.log(uri);
 
-  // uri += query;
-
-  // console.log(uri);
-
   request.get(uri, function(error, response, body) {
     var $, links,
         contentType;
@@ -47,28 +43,6 @@ exports.list = function(req, res, next) {
     if (error) {
       return res.render('404', { url: uri });
     }
-
-    // Did we come from another list on listlinks?
-    // if (req.query.prev) {
-    //   // update popular counts
-    //   data.upsert(req.query.prev, { url: uri }, function(error, result) {
-    //     if (error) {
-    //       throw error;
-    //     }
-    //   });
-
-    //   // Redirect without query
-    //   return res.redirect(pathname);
-    // }
-
-    // contentType = response.headers['content-type'];
-
-    // if (contentType.indexOf('image') != -1) {
-    //   // TODO (tylor): Draw image instead of list
-    //   console.log('draw image');
-    //   res.end();
-    //   return;
-    // }
 
     $ = cheerio.load(body);
     links = {};
@@ -81,6 +55,7 @@ exports.list = function(req, res, next) {
           src = $image.attr('src')
           alt = $image.attr('alt');
 
+      // ignore if href missing
       if (!href) {
         return;
       }
@@ -94,20 +69,23 @@ exports.list = function(req, res, next) {
       // Ignore everything after the hashmark
       href = href.split('#')[0];
 
+      // Ignore self links
+      if (href === uri) {
+        return;
+      }
+
+
+
       // Remove html elements from text
       text = text.replace(/<(?:.|\n)*?>/gm, ' ');
 
-      // Use href if link is empty
+      // Use alt if link is empty
       if (text.trim() === '') {
-        text = alt;
-      }
-
-      if (!text || text.trim() === '') {
-        text = href;
-      }
-
-      if (href === uri) {
-        return;
+        if (alt) {
+          text = alt;
+        } else {
+          text = href;
+        }
       }
 
       href = '/' + href;
@@ -122,10 +100,8 @@ exports.list = function(req, res, next) {
     // Get list of popular links
     data.readPopular(uri, function(error, popular) {
       if (error) {
-        throw error;
+        return next(error);
       }
-
-      // console.log(popular);
 
       popular = _.map(popular, function(obj) {
         return '/' + obj.url;
@@ -136,9 +112,8 @@ exports.list = function(req, res, next) {
       // Convert map to array
       links = _.map(links, function(data, href) {
         if (_.contains(popular, href)) {
-          console.log(true);
+          data.popular = true;
         }
-        // console.log(href);
         data.href = href;
         return data;
       });
@@ -153,9 +128,7 @@ exports.list = function(req, res, next) {
       // Render  the pages
       res.render('list', {
         json: json,
-        uri: uri,
-        // links: links,
-        // popular: popular
+        uri: uri
       });
     });
 
