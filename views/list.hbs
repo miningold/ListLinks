@@ -261,16 +261,30 @@
 <script>
   var json = "{{{json}}}",
       currentUrl = "{{{uri}}}",
+      sortFunc,
+      sortType,
       wait = 500,
       $linklist,
       $popularlist,
-      i, len, links,
+      i, len,
+      links,
+      filterList,
       updateList,
       updateCount,
       search,
+      sort,
       submitQuery,
       updateQuery,
       searchTimerId;
+
+  sortFunc = {
+    abc: function(a, b) {
+      return a.text.toLowerCase() > b.text.toLowerCase() ? 1 : -1;
+    },
+    zyx: function(a, b) {
+      return a.text.toLowerCase() > b.text.toLowerCase() ? -1 : 1;
+    }
+  };
 
   // Update the page visit count then load next page
   updateCount = function(event) {
@@ -299,6 +313,8 @@
     var link,
         $li, $a, $h2;
 
+    // currentList = list.slice(0);
+
     // Begin by emptying the lists
     $linklist.empty();
     $popularlist.empty();
@@ -316,15 +332,6 @@
         .click(updateCount);
       $li = $('<li>').append($a);
 
-      // Add image if it exists
-      if (link.src) {
-        $li
-          .addClass('image')
-          .css({
-            'background-image': "url('" + link.src + "')"
-          });
-      }
-
       // Add li to list
       $linklist.append($li);
 
@@ -333,19 +340,43 @@
         $star.addClass('star');
         $li.clone().appendTo($popularlist);
       }
+
+      // if (link.src) {
+      //   setTimeout(function() {
+      //     $li
+      //       .addClass('image')
+      //       .css({
+      //         'background-image': "url('" + link.src + "')"
+      //       });
+      //     }, 500);
+      // }
     }
   };
 
-  search = function(query) {
-    var list = fuzzy.filter(query, links, {
+  search = function(query, list) {
+    var result = fuzzy.filter(query, list, {
       extract: function(el) {
         return el.text;
       }
     });
 
-    list = list.map(function(el) { return el.original; });
+    result = result.map(function(el) { return el.original; });
 
-    updateList(list);
+    filterList = result;
+
+    return result;
+  };
+
+  sort = function(list, sort) {
+    sort = sort || sortType;
+    sortType = sort;
+
+    if (sortFunc[sort]) {
+      list = list.slice(0);
+      list.sort(sortFunc[sort]);
+    }
+
+    return list;
   };
 
   // immediately filter links
@@ -355,7 +386,7 @@
     var $input = $(this).find('input')
     var query = $input.val();
 
-    search(query);
+    updateList(sort(search(query, links)));
 
     // force lose focus
     $input.blur();
@@ -366,52 +397,57 @@
     var query = $(this).val();
 
     clearTimeout(searchTimerId);
-    searchTimerId = setTimeout(search, wait, query);
+    searchTimerId = setTimeout(function(query) {
+      updateList(sort(search(query, links)));
+    }, wait, query);
+  };
+
+  var toggleOptions = function(eName) {
+    $('.search, .sort').height(0);
+    var $element = $('#' + eName);
+
+    if($element.hasClass('selected')) {
+      $('.' + eName).height(0);
+    } else {
+      $('#search, #sort').removeClass('selected');
+      $('.' + eName).height(60);
+    }
+    $element.toggleClass('selected');
   };
 
   $(function() {
     $linklist = $('#links');
     $popularlist = $('#popular');
     links = JSON.parse(json);
+    filterList = links;
 
     $('#search-form').submit(submitQuery);
     $('#query').keyup(updateQuery);
 
-    updateList(links);
 
+    $('#search').click(function() {
+      toggleOptions('search');
+    });
+    $('#sort').click(function() {
+      toggleOptions('sort');
+    });
+
+    $('.sort-option').click(function() {
+      var $this = $(this);
+
+      if(!$this.hasClass('selected')) {
+        $('.sort-option').removeClass('selected');
+        $this.addClass('selected');
+
+        var sortType = $this.text().toLowerCase();
+
+        updateList(sort(filterList, sortType));
+      }
+    });
+
+    updateList(links);
     console.log(currentUrl);
   });
-
-var toggleOptions = function(eName) {
-  $('.search, .sort').height(0);
-  var $element = $('#' + eName);
-
-  if($element.hasClass('selected')) {
-    $('.' + eName).height(0);
-  } else {
-    $('#search, #sort').removeClass('selected');
-    $('.' + eName).height(60);
-  }
-  $element.toggleClass('selected');
-};
-
-$(function() {
-
-  $('#search').click(function() {
-    toggleOptions('search');
-  });
-  $('#sort').click(function() {
-    toggleOptions('sort');
-  });
-
-  $('.sort-option').click(function() {
-    if(!$(this).hasClass('selected')) {
-      $('.sort-option').removeClass('selected');
-      $(this).addClass('selected');
-    }
-  });
-
-});
 
 </script>
 
