@@ -21,8 +21,7 @@ exports.updateCount = function(req, res, next) {
 exports.list = function(req, res, next) {
   var uri = req.url.substring(1),
       protocol = /^https?:\/\//,
-      asdf = '',
-      uri;
+      asdf = '';
 
   if (uri === '') {
     res.render('index');
@@ -33,8 +32,6 @@ exports.list = function(req, res, next) {
   if (!protocol.test(uri)) {
     uri = 'http://' + uri;
   }
-
-  console.log(uri);
 
   request.get(uri, function(error, response, body) {
     var $, links,
@@ -54,9 +51,9 @@ exports.list = function(req, res, next) {
     $('a').each(function(i, a) {
       var $link = $(a),
           href = $link.attr('href'),
-          text = $link.html()
+          text = $link.html(),
           $image = $link.find('img').first(),
-          src = $image.attr('src')
+          src = $image.attr('src'),
           alt = $image.attr('alt');
 
       // ignore if href missing
@@ -77,8 +74,6 @@ exports.list = function(req, res, next) {
       if (href === uri) {
         return;
       }
-
-
 
       // Remove html elements from text
       text = text.replace(/<(?:.|\n)*?>/gm, ' ');

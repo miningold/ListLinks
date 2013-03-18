@@ -327,19 +327,18 @@
       // Add li to list
       $linklist.append($li);
 
-      // Clone to popular list if popular
-      if (link.popular) {
-        $star.addClass('star');
-        $li.clone().appendTo($popularlist);
-      }
-
-      console.log(link.src);
       if (link.src) {
         $li
           .addClass('image')
           .css({
             'background-image': "url('" + link.src + "')"
           });
+      }
+
+      // Clone to popular list if popular
+      if (link.popular) {
+        $star.addClass('star');
+        $li.clone().appendTo($popularlist);
       }
     }
   };
