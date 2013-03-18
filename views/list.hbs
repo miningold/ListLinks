@@ -14,7 +14,7 @@
   }
 
   .wrapper {
-    padding-bottom: 40px;
+    padding-bottom: 60px;
   }
 
   ul {
@@ -41,6 +41,7 @@
     display: block;
     height: 80px;
     text-decoration: none;
+    position: relative;
   }
 
   li h2 {
@@ -194,62 +195,53 @@
     cursor: auto;
   }
 
-  /*.star {
-     margin: 50px 0;
-     position: relative;
-     display: block;
-     color: red;
-     width: 0px;
-     height: 0px;
-     border-right:  100px solid transparent;
-     border-bottom: 70px  solid red;
-     border-left:   100px solid transparent;
-     -moz-transform:    rotate(35deg);
-     -webkit-transform: rotate(35deg);
-     -ms-transform:     rotate(35deg);
-     -o-transform:      rotate(35deg);
+  .star {
+    position: absolute;
+    display: block;
+    width: 0px;
+    height: 0px;
+    top: 36px;
+    left: 7px;
+    border-right:  10px solid transparent;
+    border-bottom: 7px  solid #60B5D7;
+    border-left:   10px solid transparent;
+    -moz-transform:    rotate(35deg);
+    -webkit-transform: rotate(35deg);
+    -ms-transform:     rotate(35deg);
+    -o-transform:      rotate(35deg);
   }
   .star:before {
-     border-bottom: 80px solid red;
-     border-left: 30px solid transparent;
-     border-right: 30px solid transparent;
-     position: absolute;
-     height: 0;
-     width: 0;
-     top: -45px;
-     left: -65px;
-     display: block;
-     content: '';
-     -webkit-transform: rotate(-35deg);
-     -moz-transform:    rotate(-35deg);
-     -ms-transform:     rotate(-35deg);
-     -o-transform:      rotate(-35deg);
+    border-bottom: 8px solid #60B5D7;
+    border-left: 3px solid transparent;
+    border-right: 3px solid transparent;
+    position: absolute;
+    height: 0;
+    width: 0;
+    top: -5px;
+    left: -7px;
+    display: block;
+    content: '';
+    -webkit-transform: rotate(-35deg);
+    -moz-transform:    rotate(-35deg);
+    -ms-transform:     rotate(-35deg);
+    -o-transform:      rotate(-35deg);
 
   }
   .star:after {
-     position: absolute;
-     display: block;
-     color: red;
-     top: 3px;
-     left: -105px;
-     width: 0px;
-     height: 0px;
-     border-right: 100px solid transparent;
-     border-bottom: 70px solid red;
-     border-left: 100px solid transparent;
-     -webkit-transform: rotate(-70deg);
-     -moz-transform:    rotate(-70deg);
-     -ms-transform:     rotate(-70deg);
-     -o-transform:      rotate(-70deg);
-     content: '';
-  }*/
-
-  .star {
     position: absolute;
-    background-color: yellow;
-    width: 20px;
-    height: 20px;
-    border: 1px solid black;
+    display: block;
+    top: 1px;
+    left: -11px;
+    width: 0px;
+    height: 0px;
+    border-right: 10px solid transparent;
+    border-bottom: 7px solid #60B5D7;
+    border-left: 10px solid transparent;
+    -webkit-transform: rotate(-70deg);
+    -moz-transform:    rotate(-70deg);
+    -ms-transform:     rotate(-70deg);
+    -o-transform:      rotate(-70deg);
+    content: '';
   }
 
 </style>
