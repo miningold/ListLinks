@@ -333,15 +333,14 @@
         $li.clone().appendTo($popularlist);
       }
 
-      // if (link.src) {
-      //   setTimeout(function() {
-      //     $li
-      //       .addClass('image')
-      //       .css({
-      //         'background-image': "url('" + link.src + "')"
-      //       });
-      //     }, 500);
-      // }
+      console.log(link.src);
+      if (link.src) {
+        $li
+          .addClass('image')
+          .css({
+            'background-image': "url('" + link.src + "')"
+          });
+      }
     }
   };
 
