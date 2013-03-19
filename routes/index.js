@@ -1,5 +1,4 @@
 var _ = require('lodash'),
-    fuzzy = require('fuzzy'),
     url = require('url'),
     request = require('request'),
     cheerio = require('cheerio'),
@@ -10,11 +9,11 @@ exports.index = function(req, res) {
 };
 
 exports.updateCount = function(req, res, next) {
-  data.upsert(req.url.substring(1), { url: req.body.target }, function(error, result) {
+  data.upsert(req.url.substring(1), {url: req.body.target}, function(error, result) {
     if (error) {
       throw error;
     }
-    res.send({ status: result });
+    res.send({status: result});
   });
 };
 
@@ -86,8 +85,6 @@ exports.list = function(req, res, next) {
           text = href;
         }
       }
-
-      //href = '/' + href;
 
       // Use map to prevent dups
       links[href] = {
