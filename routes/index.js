@@ -119,10 +119,10 @@ exports.list = function(req, res, next) {
 
       // Convert to json and clean up
       var json = JSON.stringify(links);
-      json = json.replace(/\\n/g, '');
-      json = json.replace(/\\t/g, ' ');
-      json = json.replace(/\\/g, '\\\\');
-      json = json.replace(/\"/g, '\\\"');
+      json = json.replace(/\\n/g, ' ');    // newline
+      json = json.replace(/\\t/g, ' ');   // tabs
+      json = json.replace(/\\/g, '\\\\'); // backslash
+      json = json.replace(/\"/g, '\\\"'); // double quotes
 
       // Render  the pages
       res.render('list', {
@@ -130,7 +130,5 @@ exports.list = function(req, res, next) {
         uri: uri
       });
     });
-
   });
-
 };
