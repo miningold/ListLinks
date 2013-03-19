@@ -87,7 +87,7 @@ exports.list = function(req, res, next) {
         }
       }
 
-      href = '/' + href;
+      //href = '/' + href;
 
       // Use map to prevent dups
       links[href] = {
@@ -103,7 +103,7 @@ exports.list = function(req, res, next) {
       }
 
       popular = _.map(popular, function(obj) {
-        return '/' + obj.url;
+        return obj.url;
       });
 
       console.log(popular);

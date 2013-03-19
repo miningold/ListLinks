@@ -386,7 +386,6 @@
       url: '/' + currentUrl,
       data: { target: target },
       success: function(result) {
-        console.log(result);
         window.location = '/' + target;
       }
       // ,
@@ -413,11 +412,11 @@
 
       // Create the elements
       $h2 = $('<h2>').html(link.text);
-      $iframe = $('<iframe src="http://purple.com">');
+      $iframe = $('<iframe data-src="' + link.href + '">');
       $star = $('<div>');
       $dropdown = $('<div class="dropdown">')
       $a = $('<a>')
-        .attr('href', link.href)
+        .attr('href', '/' + link.href)
         .append($h2)
         .click(updateCount);
       $li = $('<li>')
@@ -507,15 +506,9 @@
     $element.toggleClass('selected');
   };
 
-  $(function() {
-    $linklist = $('#links');
-    $popularlist = $('#popular');
-    links = JSON.parse(json);
-    filterList = links;
-
+  var setupEvents = function() {
     $('#search-form').submit(submitQuery);
     $('#query').keyup(updateQuery);
-
 
     $('#search').click(function() {
       toggleOptions('search');
@@ -537,13 +530,32 @@
       }
     });
 
-    updateList(links);
-    console.log(currentUrl);
-
+    console.log('got here');
     $('.dropdown').click(function() {
+      console.log('got foo');
+      // Lazy load iframe
+      $(this).siblings('iframe').attr('src', function() {
+        return $(this).data('src');
+      });
+
       $(this).parent().toggleClass('preview');
       $(this).toggleClass('open');
     });
+  };
+
+  $(function() {
+    $linklist = $('#links');
+    $popularlist = $('#popular');
+    links = JSON.parse(json);
+
+    // Init filter list as initial list
+    filterList = links;
+
+    // Populate lists
+    updateList(links);
+
+    // Setup events after list has been populated first
+    setupEvents();
   });
 
 </script>
